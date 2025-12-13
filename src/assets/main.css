@@ -1,0 +1,86 @@
+@import "tailwindcss";
+/* choose one of the following */
+
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap'); */
+/* @import "flowbite/src/themes/default"; */
+
+/* MINIMAL THEME
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "flowbite/src/themes/minimal";
+*/
+
+/* ENTERPRISE THEME */
+@import "flowbite/src/themes/enterprise";
+
+
+
+
+/* PLAYFUL THEME
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap');
+@import "flowbite/src/themes/playful";
+*/
+
+/* MONO THEME
+@import "flowbite/src/themes/mono";
+*/
+
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+/* Durasi dan easing utama */
+.toast-slide-enter-active,
+.toast-slide-leave-active {
+  transition: all 1s cubic-bezier(.22,.61,.36,1);
+}
+
+/* -------------------------------------------------
+   ENTER (MUNCUL) — bounce masuk dari kanan
+   ------------------------------------------------- */
+
+/* Mulai jauh di kanan */
+.toast-slide-enter-from {
+  transform: translateX(150%);
+  opacity: 0;
+}
+
+/* Overshoot sedikit ke kiri */
+.toast-slide-enter-to {
+  transform: translateX(-85px);
+  opacity: 1;
+}
+
+/* Setelah enter, stabil ke posisi normal */
+.toast-slide-enter-active {
+  animation: toast-bounce-in 0.7s cubic-bezier(.32,.61,.36,1) forwards;
+}
+
+@keyframes toast-bounce-in {
+  0%   { transform: translateX(150%); opacity: 0; }
+  70%  { transform: translateX(-25px); opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+/* -------------------------------------------------
+   LEAVE (HILANG) — bounce keluar ke kanan
+   ------------------------------------------------- */
+/* LEAVE */
+.toast-slide-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast-slide-leave-to {
+  opacity: 1;
+}
+
+.toast-slide-leave-active {
+  animation: toast-bounce-out 2s cubic-bezier(0,.5,.16,1) forwards;
+}
+
+@keyframes toast-bounce-out {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-30px); }
+  /* 40%  { opacity: 0.80; }
+  60%  { opacity: 0.75; } */
+  100% { transform: translateX(150%);}
+}
