@@ -1,94 +1,92 @@
 <script setup>
-import { ref } from 'vue';
-import api from '../api/axios'
-import Spinner from './Spinner.vue';
-import { useToastStore } from '../stores/toast';
+import { ref } from "vue";
+import api from "../api/axios";
+import Spinner from "./Spinner.vue";
+import { useToastStore } from "../stores/toast";
 
-const title = ref('')
-const desc = ref('')
-const isLoading = ref(false)
+const title = ref("");
+const desc = ref("");
+const isLoading = ref(false);
 
-const emit = defineEmits(['closeModal'])
+const emit = defineEmits(["closeModal"]);
 
-const selectedImage = ref(null)
-const toast = useToastStore()
+const selectedImage = ref(null);
+const toast = useToastStore();
 
 const handleCloseModal = () => {
-  emit('closeModal', false)
-}
-
+  emit("closeModal", false);
+  toast.show("New Post created successfully.");
+};
 
 const onFileChange = (e) => {
-
-  const file = e.target.files[0]
+  const file = e.target.files[0];
 
   if (!file) {
-    return
+    return;
   }
 
-  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"]
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
 
   if (!allowedTypes.includes(file.type)) {
-    alert("File harus berupa JPG, JPEG, atau PNG")
-    e.target.value = "" 
-    selectedImage.value = null
-    return
+    alert("File harus berupa JPG, JPEG, atau PNG");
+    e.target.value = "";
+    selectedImage.value = null;
+    return;
   }
 
-  selectedImage.value = file
-}
+  selectedImage.value = file;
+};
 
 const handleTitleInput = (e) => {
   if (e.target.value.length > 100) {
-    e.target.value = e.target.value.slice(0, 100)
+    e.target.value = e.target.value.slice(0, 100);
   }
-  title.value = e.target.value
-}
+  title.value = e.target.value;
+};
 
 const handleDescInput = (e) => {
   if (e.target.value.length > 255) {
-    e.target.value = e.target.value.slice(0, 255)
+    e.target.value = e.target.value.slice(0, 255);
   }
-  desc.value = e.target.value
-}
+  desc.value = e.target.value;
+};
 
 const submitPostHandler = async () => {
-  
   if (!title.value || !desc.value) {
-    alert("Judul dan Deskripsi wajib diisi")
-    return
+    alert("Judul dan Deskripsi wajib diisi");
+    return;
   }
-  isLoading.value = true
+  isLoading.value = true;
 
   try {
-    const formData = new FormData()
-  
-    formData.append('title', title.value)
-    formData.append('desc', desc.value)
-    formData.append('image', selectedImage.value)
-    
-    const res = await api.post('/posts', formData, {
+    const formData = new FormData();
+
+    formData.append("title", title.value);
+    formData.append("desc", desc.value);
+    formData.append("image", selectedImage.value);
+
+    await api.post("/posts", formData, {
       headers: {
-        'Content-Type': 'multipart/formdata'
-      }
-    })
+        "Content-Type": "multipart/formdata",
+      },
+    });
 
-    toast.show('New Post created successfully.')
-    handleCloseModal()
-
+    handleCloseModal();
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 </script>
 
 <template>
   <div v-if="isLoading">
-    <Spinner/>
+    <Spinner />
   </div>
   <div class="w-full h-full">
-    <form @submit.prevent="submitPostHandler" class="px-3  rounded w-full max-w-sm">
-
+    <form
+      @submit.prevent="submitPostHandler"
+      class="px-3 rounded w-full max-w-sm"
+    >
       <!-- TITLE -->
       <input
         :value="title"
@@ -110,16 +108,14 @@ const submitPostHandler = async () => {
         placeholder="Tulis konten di sini..."
       ></textarea>
 
-      <p class="text-xs text-gray-500 text-right mb-3">
-        {{ desc.length }}/255
-      </p>
+      <p class="text-xs text-gray-500 text-right mb-3">{{ desc.length }}/255</p>
 
-
-      <input 
-          type="file" 
-          @change="onFileChange"
-          accept="image/jpeg, image/png"
-          class="w-full h-fit shadow block rounded mb-4">
+      <input
+        type="file"
+        @change="onFileChange"
+        accept="image/jpeg, image/png"
+        class="w-full h-fit shadow block rounded mb-4"
+      />
 
       <!-- SUBMIT -->
       <button
